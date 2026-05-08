@@ -104,7 +104,7 @@
             🎁 Babalar Günü'ne Özel Fırsatları Kaçırmayın! <span id="countdown"></span> kaldı! 🛠️
         </span>
     </div>
-</div>
+</div> 
 
 <script>
 function updateCountdown() {

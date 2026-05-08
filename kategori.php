@@ -85,5 +85,8 @@ $filtrelenmisUrunler = array_values($filtrelenmisUrunler);
             <?php endif; ?>
         </div>
     </main>
+
+<?php include 'footer.php'; ?>
+
 </body>
 </html>

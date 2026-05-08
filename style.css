@@ -557,3 +557,108 @@ a {
     background: #fff8f5;
     transform: translateY(-2px);
 }
+
+/* --- MODERN FOOTER TASARIMI --- */
+.modern-footer {
+    background-color: #1a1a1a; /* Derin ve modern bir koyu gri */
+    color: #cccccc;
+    padding: 60px 0 0 0;
+    margin-top: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-top: 4px solid #ff6600; /* Üst kısma ince kurumsal turuncu çizgi */
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex; /* YAN YANA DURMALARINI SAĞLAYAN SİHİRLİ KOD */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 20px;
+    gap: 40px;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 220px; /* Ekran küçülünce bozulmayı engeller */
+}
+
+.footer-brand {
+    color: #ffffff;
+    font-size: 26px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.footer-brand span {
+    color: #ff6600; /* Dükkan kelimesi turuncu */
+}
+
+.footer-title {
+    color: #ffffff;
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+/* Başlıkların altındaki şık turuncu çizgi */
+.footer-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px;
+    height: 3px;
+    background-color: #ff6600;
+    border-radius: 2px;
+}
+
+.footer-text {
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.footer-links, .footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li, .footer-contact li {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.footer-links a {
+    color: #cccccc;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #ff6600;
+    padding-left: 5px; /* Üzerine gelince sağa doğru hafif kayma efekti */
+}
+
+.footer-contact li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-contact i {
+    color: #ff6600;
+    font-size: 16px;
+    width: 20px;
+}
+
+.footer-bottom {
+    background-color: #0f0f0f;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    font-size: 13px;
+    color: #777777;
+}

@@ -87,5 +87,8 @@ if (!$secilenUrun) { header("Location: index.php"); exit; }
             </form>
         </div>
     </main>
+
+<?php include 'footer.php'; ?>
+
 </body>
 </html>

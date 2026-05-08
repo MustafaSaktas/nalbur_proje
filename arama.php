@@ -60,5 +60,8 @@ if (!empty($sorgu)) {
             <?php endif; ?>
         </div>
     </main>
+
+<?php include 'footer.php'; ?>
+
 </body>
 </html>

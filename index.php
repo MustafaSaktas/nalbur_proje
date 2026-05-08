@@ -106,5 +106,8 @@ include 'header.php'; // Header içeriği buradan çekiliyor
         document.querySelector('.prev-btn').addEventListener('click', () => { slideIndex--; showSlide(slideIndex); });
         setInterval(() => { slideIndex++; showSlide(slideIndex); }, 5000);
     </script>
+
+<?php include 'footer.php'; ?>
+
 </body>
 </html>
