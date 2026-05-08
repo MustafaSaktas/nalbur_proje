@@ -1,4 +1,12 @@
 <!-- header.php -->
+<?php
+// Eğer oturum zaten açık değilse aç
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
+
 <header class="main-header">
     <div class="container header-wrapper">
         <div class="logo">
@@ -9,11 +17,36 @@
     <input type="text" name="q" placeholder="Ürün, kategori veya marka ara..." required>
     <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
 </form>
-        <div class="user-actions">
-            <a href="#" class="action-item">
-                <i class="fa-regular fa-user"></i>
-                <div class="action-text"><span class="title">Giriş Yap</span><span class="sub">veya Üye Ol</span></div>
-            </a>
+            <div class="user-actions">
+                <?php if (isset($_SESSION['user_id'])): ?>
+
+        <!-- Giriş yapılmışsa: Hesabım -->
+        <a href="hesabim.php" class="action-item">
+            <i class="fa-regular fa-circle-user"></i>
+            <div class="action-text">
+                <span class="title">Hesabım</span>
+                <span class="sub"><?= $_SESSION['user_name'] ?></span>
+            </div>
+        </a>
+        <a href="logout.php" class="action-item">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <div class="action-text">
+                <span class="title">Çıkış</span>
+                <span class="sub">Güvenli çık</span>
+            </div>
+        </a>
+    <?php else: ?>
+
+        <!-- Giriş yapılmamışsa: Giriş Yap -->
+        <a href="login.php" class="action-item">
+            <i class="fa-regular fa-circle-user"></i>
+            <div class="action-text">
+                <span class="title">Giriş Yap</span>
+                <span class="sub">veya Üye Ol</span>
+            </div>
+        </a>
+
+    <?php endif; ?>
             <a href="sepet.php" class="action-item cart-action">
                 <div class="cart-icon-wrapper">
                     <i class="fa-solid fa-cart-shopping"></i>
