@@ -38,6 +38,9 @@
         </a>
 
         <div class="nav-section">SATIŞ</div>
+        <a href="pos.php" class="nav-item" style="color: #10b981; font-weight: bold;">
+            <i class="fa-solid fa-cash-register"></i> Hızlı Satış (POS)
+        </a>
         <a href="admin_siparisler.php" class="nav-item">
             <i class="fa-solid fa-cart-shopping"></i> Müşteri Siparişleri
         </a>
