@@ -66,8 +66,11 @@ $urunler = $sorgu->fetchAll(PDO::FETCH_ASSOC);
         .search-btn { background: #1e293b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .clear-btn { background: #e2e8f0; color: #475569; text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; }
         
-        .stock-input { width: 70px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center; }
-        .stock-input:focus { border-color: #ff6600; outline: none; }
+        /* Input Stilleri */
+        .stock-input, .price-input { padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: bold; text-align: center; }
+        .stock-input { width: 70px; }
+        .price-input { width: 100px; color: #166534; }
+        .stock-input:focus, .price-input:focus { border-color: #ff6600; outline: none; background: #fff7ed; }
     </style>
 </head>
 <body>
@@ -95,11 +98,11 @@ $urunler = $sorgu->fetchAll(PDO::FETCH_ASSOC);
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th style="width: 50px;">ID</th> <!-- ID Başlığı Eklendi -->
+                        <th style="width: 50px;">ID</th>
                         <th>Görsel</th>
                         <th>Ürün Adı</th>
                         <th>Kategori</th>
-                        <th>Fiyat</th>
+                        <th>Fiyat (Düzenle)</th>
                         <th>Stok Düzenle</th>
                         <th>Stok Kodu (SKU)</th>
                         <th>İşlem</th>
@@ -109,20 +112,26 @@ $urunler = $sorgu->fetchAll(PDO::FETCH_ASSOC);
                     <?php if(count($urunler) > 0): ?>
                         <?php foreach($urunler as $u): ?>
                         <tr>
-                            <!-- Veritabanı ID'si Gösteriliyor -->
                             <td><strong>#<?php echo $u['Id']; ?></strong></td>
-                            
                             <td><img src="<?php echo htmlspecialchars($u['ImagePath']); ?>" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;"></td>
                             <td><strong><?php echo htmlspecialchars($u['Name']); ?></strong></td>
                             <td><?php echo htmlspecialchars($u['CategoryName']); ?></td>
-                            <td><?php echo number_format($u['Price'], 2, ',', '.'); ?> TL</td>
                             
                             <td style="white-space: nowrap;">
                                 <input type="number" 
-                                       class="stock-input" 
+                                       step="0.01"
+                                       class="price-input" 
                                        data-id="<?php echo $u['Id']; ?>" 
-                                       value="<?php echo $u['Stock']; ?>"
-                                       style="color: <?php echo $u['Stock'] < 5 ? '#ef4444' : '#166534'; ?>;">
+                                       value="<?php echo $u['Price']; ?>">
+                                <span id="p-status-<?php echo $u['Id']; ?>" style="display:inline-block; width: 25px; margin-left: 5px;"></span>
+                            </td>
+
+                            <td style="white-space: nowrap;">
+                                <input type="number" 
+                                        class="stock-input" 
+                                        data-id="<?php echo $u['Id']; ?>" 
+                                        value="<?php echo $u['Stock']; ?>"
+                                        style="color: <?php echo $u['Stock'] < 5 ? '#ef4444' : '#166534'; ?>;">
                                 <span id="status-<?php echo $u['Id']; ?>" style="display:inline-block; width: 25px; margin-left: 5px;"></span>
                             </td>
                             
@@ -133,7 +142,6 @@ $urunler = $sorgu->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <!-- Colspan 7'den 8'e güncellendi -->
                         <tr><td colspan="8" style="text-align: center; padding: 20px;">Aradığınız kriterlere uygun ürün bulunamadı.</td></tr>
                     <?php endif; ?>
                 </tbody>
@@ -142,6 +150,7 @@ $urunler = $sorgu->fetchAll(PDO::FETCH_ASSOC);
     </main>
 
     <script>
+        // STOK GÜNCELLEME MANTIĞI
         document.querySelectorAll('.stock-input').forEach(input => {
             input.addEventListener('change', function() {
                 const productId = this.getAttribute('data-id');
@@ -159,17 +168,39 @@ $urunler = $sorgu->fetchAll(PDO::FETCH_ASSOC);
                 .then(data => {
                     if(data.trim() === 'ok') {
                         statusSpan.innerHTML = '<i class="fa-solid fa-check" style="color: #166534;"></i>';
-                        
-                        if(newStock < 5) {
-                            this.style.color = '#ef4444';
-                        } else {
-                            this.style.color = '#166534';
-                        }
-
+                        this.style.color = (newStock < 5) ? '#ef4444' : '#166534';
                         setTimeout(() => { statusSpan.innerHTML = ''; }, 2000);
                     } else {
                         statusSpan.innerHTML = '<i class="fa-solid fa-xmark" style="color: #ef4444;"></i>';
-                        alert('Stok güncellenirken bir hata oluştu!');
+                        alert('Stok güncellenirken hata!');
+                    }
+                })
+                .catch(error => { statusSpan.innerHTML = '<i class="fa-solid fa-xmark" style="color: #ef4444;"></i>'; });
+            });
+        });
+
+        // FİYAT GÜNCELLEME MANTIĞI (YENİ)
+        document.querySelectorAll('.price-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const productId = this.getAttribute('data-id');
+                const newPrice = this.value;
+                const statusSpan = document.getElementById('p-status-' + productId);
+
+                statusSpan.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="color: #64748b;"></i>';
+
+                fetch('ajax_fiyat_guncelle.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'id=' + productId + '&fiyat=' + newPrice
+                })
+                .then(response => response.text())
+                .then(data => {
+                    if(data.trim() === 'ok') {
+                        statusSpan.innerHTML = '<i class="fa-solid fa-check" style="color: #166534;"></i>';
+                        setTimeout(() => { statusSpan.innerHTML = ''; }, 2000);
+                    } else {
+                        statusSpan.innerHTML = '<i class="fa-solid fa-xmark" style="color: #ef4444;"></i>';
+                        alert('Fiyat güncellenirken bir hata oluştu!');
                     }
                 })
                 .catch(error => {
